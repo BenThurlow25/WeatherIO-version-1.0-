@@ -6,6 +6,7 @@ Geolocation data: Nominatim API
 UVIndex Data: EPA API
 Weather Data: NWS API
 For timezoning and zipcodes: LocationIQ
+Background of the UI is from 'reactbits.dev'
 
 Features include: 
 Timezone Aware UV index metric
