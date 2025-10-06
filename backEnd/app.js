@@ -3,8 +3,14 @@ import dotenv from 'dotenv';
 dotenv.config();
 import fetch from 'node-fetch';
 import { find } from 'geo-tz';
+const apiKey = process.env.VITE_LOCATIONIQ_API_KEY;
+const userAgent = process.env.VITE_USER_AGENT;
+
+console.log('✅ This is the REAL app.js');
+
 
 async function getUvData(lat, lon) {
+  console.log('Entered getUvData');
   const [timezone] = find(lat, lon);
   const zipcode = await getZipcodeFromCoordinates(lat, lon);
  const localTimeStr = new Date().toLocaleString("en-US", { timeZone: timezone });
@@ -16,21 +22,28 @@ const localHour = localTime.getHours(); // ✅ works
     console.log("No ZIP code found for coordinates.");
     return "N/A";
   }
-
-  const url = `https://data.epa.gov/efservice/getEnvirofactsUVHOURLY/ZIP/${zipcode}/JSON`;
+  console.log('Resolved ZIP for UV lookup:', zipcode);
+  const url = `https://enviro.epa.gov/enviro/efservice/getEnvirofactsUVHOURLY/ZIP/${zipcode}/JSON`;
   console.log("Called getUVData with link: " + url);
 
   try {
     const response = await fetch(url, {
       headers: {
-        'User-Agent': process.env.USER_AGENT
+        'User-Agent': userAgent
       }
     });
 
     const data = await response.json();
 
-    const uvReturn = parseFloat(data[localHour]?.UV_VALUE ?? "NaN");
+    if (!Array.isArray(data) || data.length <= localHour) {
+      console.warn(`EPA UV data missing or too short. Expected hour ${localHour}, got ${data.length} entries.`);
+      return "N/A";
+    }
+
+    const uvValue = data[localHour]?.UV_VALUE;
+    const uvReturn = uvValue !== undefined ? parseFloat(uvValue) : "N/A";
     return uvReturn;
+
   } catch (error) {
     console.error("Error fetching UV data:", error);
     return "N/A";
@@ -48,7 +61,15 @@ async function getWeatherData(location) {
     const { lat, lon } = geo;
     console.log("Step 2: Getting weather process...");
     const weatherMeta = await getWeatherProcess(geo.lat, geo.lon);
-   const uvApiReturn = await getUvData(geo.lat, geo.lon);
+    console.log('About to call getUvData...');
+     let uvIndex = "N/A";
+      try {
+        console.log("Step 2.5: About to call getUvData...");
+        uvIndex = await getUvData(geo.lat, geo.lon);
+        console.log("Step 2.6: UV data returned:", uvIndex);
+      } catch (uvErr) {
+        console.error("UV data fetch failed:", uvErr);
+      }
     //console.log("Weather meta:", weatherMeta);
 
 
@@ -65,8 +86,8 @@ async function getWeatherData(location) {
     console.log("Step 4: Getting hourly forecast...");
     const dailyForecast = await getDailyForecastData(dailyForecastUrl);
     //console.log("Hourly forecast periods:", dailyForecast?.length);
-    const uvIndex = uvApiReturn
-    console.log("Today’s UV Index:", uvIndex);
+  
+
 
     return {
       dailyForecast: forecastPeriods,
@@ -122,7 +143,7 @@ function getWeatherProcess(lat, lon) {
 
   return fetch(url, {
     headers: {
-      'User-Agent': process.env.USER_AGENT,
+      'User-Agent': userAgent,
       'Accept': 'application/json'
     }
   })
@@ -204,16 +225,17 @@ async function getDailyForecastData(URL) {
 }
 
 async function getZipcodeFromCoordinates(latitude, longitude) {
-  const url = `https://us1.locationiq.com/v1/reverse.php?key=${process.env.LOCATIONIQ_API_KEY}&lat=${latitude}&lon=${longitude}&format=json`;
+  const url = `https://us1.locationiq.com/v1/reverse.php?key=${apiKey}&lat=${latitude}&lon=${longitude}&format=json`;
 
   try {
     const response = await fetch(url, {
       headers: {
-        'User-Agent': process.env.USER_AGENT
+        'User-Agent': userAgent
       }
     });
-
+    
     const data = await response.json();
+    console.log('LocationIQ response:', data);
 
     const zip = data?.address?.postcode;
     if (zip) {

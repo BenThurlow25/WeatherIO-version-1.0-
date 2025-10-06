@@ -21,7 +21,7 @@ function App() {
  const handleSubmit = async () => {
   setCurrentScreen('loading'); // ✅ show loading message
   try {
-    const response = await fetch(`https://weatherio-version-1-0.onrender.com/forecast?q=${encodeURIComponent(location)}`);
+    const response = await fetch(`http://localhost:3000/forecast?q=${encodeURIComponent(location)}`);
     const result = await response.json();
     console.log('Weekly:', result.dailyForecast);
     console.log('Hourly:', result.hourlyForecast);
