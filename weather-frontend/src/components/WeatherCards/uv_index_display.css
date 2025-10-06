@@ -1,0 +1,51 @@
+.uv-card {
+   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1rem;
+  font-family: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+  font-size:large;
+  color: white;
+  height: 297px;
+  width: 230px;
+  overflow-y: auto;
+  transition: max-height 0.3s ease;
+    scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+}
+
+h1{
+    font-size: 80px;
+}
+
+.uv-card:hover {
+  transform: scale(1.03);
+  overflow-y: auto;
+}
+
+.uv-card::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.uv-low {
+  background: rgba(68, 255, 0, 0.253);
+  backdrop-filter: blur(10px);
+}
+
+.uv-moderate {
+  background: rgba(255, 251, 0, 0.253);
+  backdrop-filter: blur(10px);
+}
+
+.uv-high {
+  background: rgba(255, 0, 0, 0.253);
+  backdrop-filter: blur(10px);
+}

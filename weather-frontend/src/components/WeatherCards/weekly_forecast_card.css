@@ -1,0 +1,32 @@
+.weather-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1rem;
+  font-family: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+  color: white;
+  max-height: 800px; /* ← makes card fill its grid cell */
+  width: 100%;
+  max-width: 250px;
+  overflow-y: auto;
+  transition: max-height 0.3s ease;
+    scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+}
+
+
+.weather-card:hover {
+  transform: scale(1.03);
+  overflow-y: auto;
+}
+
+.weather-card::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+
