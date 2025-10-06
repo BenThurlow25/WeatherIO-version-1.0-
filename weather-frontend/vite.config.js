@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  base:"https://github.com/BenThurlow25/WeatherIO-version-1.0-",
+  base:"/WeatherIO-version-1.0-/",
   plugins: [react()],
   server: {
     proxy: {
