@@ -11,20 +11,25 @@ console.log('✅ This is the REAL app.js');
 
 async function getUvData(lat, lon) {
   console.log('Entered getUvData');
+
   const [timezone] = find(lat, lon);
   const zipcode = await getZipcodeFromCoordinates(lat, lon);
- const localTimeStr = new Date().toLocaleString("en-US", { timeZone: timezone });
-const localTime = new Date(localTimeStr);
-const localHour = localTime.getHours(); // ✅ works
-
 
   if (!zipcode) {
     console.log("No ZIP code found for coordinates.");
     return "N/A";
   }
+
   console.log('Resolved ZIP for UV lookup:', zipcode);
+
+  const targetHour = new Date().toLocaleString("en-US", {
+    timeZone: timezone,
+    hour: 'numeric',
+    hour12: true
+  }); // e.g. "10 AM"
+
   const url = `https://enviro.epa.gov/enviro/efservice/getEnvirofactsUVHOURLY/ZIP/${zipcode}/JSON`;
-  console.log("Called getUVData with link: " + url);
+  console.log("Called getUVData with link:", url);
 
   try {
     const response = await fetch(url, {
@@ -35,13 +40,20 @@ const localHour = localTime.getHours(); // ✅ works
 
     const data = await response.json();
 
-    if (!Array.isArray(data) || data.length <= localHour) {
-      console.warn(`EPA UV data missing or too short. Expected hour ${localHour}, got ${data.length} entries.`);
-      return "N/A";
-    }
+    console.log("🕒 targetHour:", targetHour);
+    console.log("📊 EPA data length:", data.length);
+    console.log("📊 EPA data sample:", data.slice(0, 3));
 
-    const uvValue = data[localHour]?.UV_VALUE;
+    const matchedEntry = data.find(entry =>
+      entry.DATE_TIME.includes(targetHour)
+    );
+
+    console.log(`✅ Matched UV entry for ${targetHour}:`, matchedEntry);
+
+    const uvValue = matchedEntry?.UV_VALUE;
     const uvReturn = uvValue !== undefined ? parseFloat(uvValue) : "N/A";
+
+    console.log("🌞 Final UV value returned:", uvReturn);
     return uvReturn;
 
   } catch (error) {
@@ -72,6 +84,7 @@ async function getWeatherData(location) {
       }
     //console.log("Weather meta:", weatherMeta);
 
+    const locationString = `${geo.lat},${geo.lon}`;
 
 
     const forecastUrl = weatherMeta?.properties?.forecast;
@@ -90,10 +103,12 @@ async function getWeatherData(location) {
 
 
     return {
-      dailyForecast: forecastPeriods,
-      hourlyForecast: dailyForecast || [],
-      UVIndexData: uvIndex
-    };
+    dailyForecast: forecastPeriods,
+    hourlyForecast: dailyForecast || [],
+    uvIndex: uvIndex,
+    locationString: locationString
+  };
+
 
 
   } catch (err) {
@@ -263,7 +278,7 @@ export {
   getWeatherData,
   getForecastData,
   getDailyForecastData,
-  getUvData
+  getUvData,
 };
 
 

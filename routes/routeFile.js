@@ -7,12 +7,13 @@ router.get('/', async (req, res) => {
   const location = req.query.q || 'Providence';
 
   try {
-    const { dailyForecast, hourlyForecast, UVIndexData } = await getWeatherData(location);
+    const { dailyForecast, hourlyForecast, uvIndex, locationString } = await getWeatherData(location);
 
   res.json({
     dailyForecast,
     hourlyForecast,
-    uvIndex:UVIndexData // ✅ now it's just a key-value pair
+    uvIndex:uvIndex,
+    locationString: locationString
   });
 
 

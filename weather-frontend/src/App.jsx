@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // ✅ include useEffect
 import Particles from './components/galaxy_background.jsx';
 import AnimatedTextLoop from './components/AnimatedTextLoop.jsx';
 import WeatherProfile from './WeatherProfile.jsx';
@@ -8,6 +8,7 @@ import WeeklyForecastCard from './components/WeatherCards/weekly_forecast_card';
 import DailyForecastCard from './components/WeatherCards/daily_forecast_card';
 import './App.css';
 import UvIndexCard from './components/WeatherCards/uv_index_display.jsx';
+import WeatherMapCard from './components/WeatherCards/weather-map-card.jsx';
 
 
 function App() {
@@ -16,19 +17,25 @@ function App() {
   const [weeklyWeatherData, setWeeklyWeatherData] = useState(null); // NEW
   const [dailyWeatherData, setDailyWeatherData] = useState(null); // NEW
   const [uvIndex, setUvIndex] = useState(null);
+  const [locationString, setLocationString] = useState(null);
+
+  const returnToMenu = () => {
+    setCurrentScreen('location'); // ✅ resets to location input screen
+  };
 
 
  const handleSubmit = async () => {
   setCurrentScreen('loading'); // ✅ show loading message
   try {
-    const response = await fetch(`https://weatherio-version-1-0.onrender.com/forecast?q=${location}`);
+    const response = await fetch(`http://localhost:3000/forecast?q=${location}`);
     const result = await response.json();
+    console.log("📦 Full backend response:", result);
     console.log('Weekly:', result.dailyForecast);
     console.log('Hourly:', result.hourlyForecast);
-
     setWeeklyWeatherData(result.dailyForecast);
     setDailyWeatherData(result.hourlyForecast.slice(0, 24));
     setUvIndex(result.uvIndex);
+    setLocationString(result.locationString)
     setCurrentScreen('display');
   } catch (error) {
     console.error('Error fetching weather:', error);
@@ -36,6 +43,10 @@ function App() {
   }
 };
 
+  useEffect(() => {
+  console.log("✅ locationString updated:", locationString);
+  console.log("✅ uvIndex updated:", uvIndex);
+}, [locationString, uvIndex]);
 
     const phrases = [
     "Providence",
@@ -45,8 +56,6 @@ function App() {
     "Seattle",
     "Chicago"
   ];
-
-
 
   return (
   <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
@@ -157,6 +166,8 @@ function App() {
         </>
       )}
 
+      
+
     {currentScreen === 'loading' && (
       <p style={{ color: 'white', fontSize: '1.5rem' }}>Fetching forecast data...</p>
     )}
@@ -176,6 +187,13 @@ function App() {
          <UvIndexCard data={uvIndex} />
        </div>
      )}
+     <div>
+    <WeatherMapCard data={locationString}/>
+    </div>
+    <button className="MainMenu" onClick={returnToMenu}>
+    Return to Menu
+    </button>
+
    </div>
 )}
 
