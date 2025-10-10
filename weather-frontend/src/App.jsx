@@ -90,7 +90,7 @@ function App() {
     >
       {currentScreen === 'location' && (
         <>
-          <h1 style={{ position: 'relative', right: 20, fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif', fontSize: '3rem', marginBottom: '1rem' }}>
+          <h1  className="MainTitle" style={{ position: 'relative', right: 20, fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif', fontSize: '3rem', marginBottom: '1rem' }}>
             WeatherIO
           </h1>
 
@@ -126,6 +126,7 @@ function App() {
               placeholder="e.g. Providence"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
+              className= "SearchBar"
               style={{
                 padding: '0.5rem 1rem',
                 fontSize: '1rem',
@@ -137,6 +138,7 @@ function App() {
             />
             <button
               type="submit"
+              className="submitButton"
               style={{
                 padding: '0.5rem 1.2rem',
                 fontSize: '1rem',
@@ -152,14 +154,7 @@ function App() {
           </form>
 
           <h4
-            style={{
-              fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-              fontSize: '1rem',
-              marginBottom: '1rem',
-              position: 'absolute',
-              bottom: '50px',
-              color: 'gray',
-            }}
+            className = "attributionText"
           >
             created by Ben Thurlow using NOMINATIM and NWS
           </h4>

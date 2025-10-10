@@ -28,9 +28,9 @@
 @media (max-width: 600px) {
   .weather-map-card {
     position:absolute;
-    top:22.5rem;
-    left:9.8rem;
-    max-width: 62%;
+    top:30rem;
+    left:-0.20rem;
+    max-width: 90%;
     max-height: 25%;
     overflow-x:hidden;
 

@@ -44,7 +44,10 @@
     position: relative;
     right: 9.7rem;
     overflow-y: auto;
-    width:187%
+    top: -24.5rem;
+    left: 10.5rem;
+    width:67%;
+    height: 19.5rem;
   }
 }
 

@@ -53,13 +53,19 @@ h1{
 
 @media (max-width: 600px) {
   .uv-card {
-    max-width: 75%;
+    max-width: 100%;
     padding: 0.5rem;
     border-radius: 0.5rem;
-    position: relative;
-    bottom: 42rem;
-    left:10rem;
-    height: 100%;
-    overflow-y: auto;
+    position: absolute;
+    bottom: 17rem;
+    left: 0rem;
+    height: 7rem;
+    width: 22rem;
+    overflow-y:hidden;
+    font-size:x-small
+  }
+
+  .h4{
+    font-size: x-small;
   }
 }
