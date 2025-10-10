@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv').config();
 const { getWeatherData } = require('./backEnd/app.js');
-const healthRoutes = require('./routes/health');
+const healthRoutes = require('./routes/healthRoute.js');
 
 
 
