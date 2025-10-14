@@ -40,20 +40,14 @@ async function getUvData(lat, lon) {
 
     const data = await response.json();
 
-    console.log("🕒 targetHour:", targetHour);
-    console.log("📊 EPA data length:", data.length);
-    console.log("📊 EPA data sample:", data.slice(0, 3));
-
     const matchedEntry = data.find(entry =>
       entry.DATE_TIME.includes(targetHour)
     );
 
-    console.log(`✅ Matched UV entry for ${targetHour}:`, matchedEntry);
 
     const uvValue = matchedEntry?.UV_VALUE;
     const uvReturn = uvValue !== undefined ? parseFloat(uvValue) : "N/A";
 
-    console.log("🌞 Final UV value returned:", uvReturn);
     return uvReturn;
 
   } catch (error) {

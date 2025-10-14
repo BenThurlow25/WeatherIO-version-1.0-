@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'; // ✅ include useEffect
+import { useState, useEffect } from 'react';
 import Particles from './components/galaxy_background.jsx';
 import AnimatedTextLoop from './components/AnimatedTextLoop.jsx';
 import WeatherProfile from './WeatherProfile.jsx';
@@ -14,24 +14,21 @@ import WeatherMapCard from './components/WeatherCards/weather-map-card.jsx';
 function App() {
   const [location, setLocation] = useState('');
   const [currentScreen, setCurrentScreen] = useState('location');
-  const [weeklyWeatherData, setWeeklyWeatherData] = useState(null); // NEW
-  const [dailyWeatherData, setDailyWeatherData] = useState(null); // NEW
+  const [weeklyWeatherData, setWeeklyWeatherData] = useState(null);
+  const [dailyWeatherData, setDailyWeatherData] = useState(null); 
   const [uvIndex, setUvIndex] = useState(null);
   const [locationString, setLocationString] = useState(null);
 
   const returnToMenu = () => {
-    setCurrentScreen('location'); // ✅ resets to location input screen
+    setCurrentScreen('location'); 
   };
 
 
  const handleSubmit = async () => {
-  setCurrentScreen('loading'); // ✅ show loading message
+  setCurrentScreen('loading'); 
   try {
     const response = await fetch(`https://weatherio-version-1-0.onrender.com/forecast?q=${location}`);
     const result = await response.json();
-    console.log("📦 Full backend response:", result);
-    console.log('Weekly:', result.dailyForecast);
-    console.log('Hourly:', result.hourlyForecast);
     setWeeklyWeatherData(result.dailyForecast);
     setDailyWeatherData(result.hourlyForecast.slice(0, 24));
     setUvIndex(result.uvIndex);
@@ -44,8 +41,6 @@ function App() {
 };
 
   useEffect(() => {
-  console.log("✅ locationString updated:", locationString);
-  console.log("✅ uvIndex updated:", uvIndex);
 }, [locationString, uvIndex]);
 
     const phrases = [
@@ -116,7 +111,7 @@ function App() {
 
           <form
             onSubmit={(e) => {
-              e.preventDefault(); // ✅ prevents page reload
+              e.preventDefault();
               handleSubmit();
             }}
             style={{ display: 'flex', gap: '1rem' }}
