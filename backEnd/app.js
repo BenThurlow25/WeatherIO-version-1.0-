@@ -5,8 +5,8 @@ import fetch from 'node-fetch';
 import { find } from 'geo-tz';
 const apiKey = process.env.VITE_LOCATIONIQ_API_KEY;
 const userAgent = process.env.VITE_USER_AGENT;
-
-console.log('✅ This is the REAL app.js');
+// @ts-check
+/// <reference path="./weatherTypes.js" />
 
 
 async function getUvData(lat, lon) {
@@ -56,7 +56,11 @@ async function getUvData(lat, lon) {
   }
 }
 
-async function getWeatherData(location) {
+/**
+ * @param {string} location
+ * @returns {Promise<WeatherDataContract>}
+ */
+async function getWeatherData(location){
   try {
     console.log("Step 1: Getting geo location...");
     const geo = await getGeoLocation(location);
@@ -83,9 +87,6 @@ async function getWeatherData(location) {
 
     const forecastUrl = weatherMeta?.properties?.forecast;
     const dailyForecastUrl = weatherMeta?.properties?.forecastHourly;
-    if (!forecastUrl || typeof forecastUrl !== 'string') {
-      throw new Error('Invalid forecast URL');
-    }
 
     console.log("Step 3: Getting forecast data...");
     const forecastPeriods = await getForecastData(weatherMeta?.properties?.forecast);
